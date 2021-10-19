@@ -1,0 +1,5 @@
+;; An example source file, printing "!"
+var hello
+point hello
+add "!"
+print hello
