@@ -2,6 +2,7 @@ use std::fs::File;
 use std::io::Write;
 
 use anyhow::{Context, Result};
+use string_builder::Builder;
 use structopt::StructOpt;
 
 extern crate pest;
@@ -23,19 +24,19 @@ struct Cli {
     output_file: std::path::PathBuf,
 }
 
-fn instruct(statement: Pair<Rule>, mut out: &File) {
+fn instruct(statement: Pair<Rule>, out: &mut Builder) {
     match statement.as_rule() {
         Rule::instruction => {
             for nested_statement in statement.into_inner() {
                 instruct(nested_statement, out);
             }
-            out.write(b"\n");
+            out.append("\n");
         }
         Rule::operator => {
-            out.write(b"operator ");
+            out.append("operator ");
         }
         Rule::operand => {
-            out.write(b"operand ");
+            out.append("operand ");
         }
 
         Rule::loopBlock => {
@@ -44,13 +45,13 @@ fn instruct(statement: Pair<Rule>, mut out: &File) {
             }
         }
         Rule::loopBlockStart => {
-            out.write(b"loopBlockStart\n");
+            out.append("loopBlockStart\n");
         }
         Rule::loopBlockEnd => {
-            out.write(b"loopBlockEnd\n");
+            out.append("loopBlockEnd\n");
         }
         Rule::EOI => {
-            out.write(b"\n");
+            out.append("\n");
         }
         _ => unreachable!(),
     }
@@ -62,7 +63,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let content = std::fs::read_to_string(&args.input_file)
         .with_context(|| format!("could not read source file {:?}", args.input_file))?;
 
-    let out = File::create(args.output_file)?;
+    let mut builder = Builder::default();
 
     let parsed_file = MblfParser::parse(Rule::file, &content)
         .expect("Parse Error")
@@ -70,9 +71,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .unwrap();
 
     for statement in parsed_file.into_inner() {
-        instruct(statement, &out);
+        instruct(statement, &mut builder);
     }
 
+    let bf = builder.string().unwrap();
+
+    let mut out = File::create(args.output_file)?;
+    out.write(bf.as_bytes())?;
     out.sync_all()?;
 
     Ok(())

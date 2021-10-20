@@ -149,6 +149,7 @@ dependencies = [
  "anyhow",
  "pest",
  "pest_derive",
+ "string-builder",
  "structopt",
 ]
 
@@ -254,6 +255,12 @@ dependencies = [
  "fake-simd",
  "opaque-debug",
 ]
+
+[[package]]
+name = "string-builder"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2bd10a070fb1f2796a288abec42695db4682a82b6f12ffacd60fb8d5ad3a4a12"
 
 [[package]]
 name = "strsim"
