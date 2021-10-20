@@ -15,11 +15,10 @@ use pest::Parser;
 #[grammar = "grammars/mblf.pest"]
 struct MblfParser;
 
-
 #[derive(StructOpt)]
 struct Cli {
     #[structopt(parse(from_os_str))]
-    input_file:  std::path::PathBuf,
+    input_file: std::path::PathBuf,
     #[structopt(parse(from_os_str))]
     output_file: std::path::PathBuf,
 }
