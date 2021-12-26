@@ -1,7 +1,7 @@
 operator       = @{ "operator" } // TODO
 operand        = @{ "operand" }  // TODO
 
-instruction    = { operator ~ (" "+ ~ operand)* }
+instruction    = { operator ~ (" "+ ~ operand)? }
 
 loopBlockStart = { "[" }
 loopBlockEnd   = { "]" }
