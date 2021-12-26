@@ -19,5 +19,6 @@ statements     = _{ statement* }
 
 newline        = _{ "\n" | "\r\n" }
 spacing        = _{ " "  | "\t" }
+COMMENT        = _{ ";;" ~ (!newline ~ ANY)* ~ newline}
 
 file = {SOI ~ (statement ~ newline+)* ~ EOI}
