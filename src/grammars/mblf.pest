@@ -3,16 +3,17 @@ operand        = @{ "operand" }  // TODO
 
 instruction    = { operator ~ (" "+ ~ operand)? }
 
-loopBlockStart = { "[" ~ ("\n" | "\r\n") }
+loopBlockStart = { "[" ~ newline }
 loopBlockEnd   = { "]" }
 loopBlock      = { loopBlockStart
                  ~ statements
-                 ~ ("\n" | "\r\n")
+                 ~ newline
                  ~ loopBlockEnd
                  }
 
 statement      = _{ instruction | loopBlock }
 statements     = _{ statement* }
 
+newline        = _{ "\n" | "\r\n" }
 
-file = {SOI ~ (statement ~ ("\n" | "\r\n")+)* ~ EOI}
+file = {SOI ~ (statement ~ newline+)* ~ EOI}
