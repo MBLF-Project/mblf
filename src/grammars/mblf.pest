@@ -1,15 +1,17 @@
-operator = @{ "operator" } // TODO
-operand = @{ "operand" }  // TODO
+operator       = @{ "operator" } // TODO
+operand        = @{ "operand" }  // TODO
 
-instruction = { operator ~ (" "+ ~ operand)*}
+instruction    = { operator ~ (" "+ ~ operand)* }
 
-loopBlockStart = {  "[" }
-loopBlockEnd = { "]" }
-loopBlock = { loopBlockStart
-            ~ instruction*
-            ~ loopBlockEnd
-}
+loopBlockStart = { "[" }
+loopBlockEnd   = { "]" }
+loopBlock      = { loopBlockStart
+                 ~ statements
+                 ~ loopBlockEnd
+                 }
 
-statement = _{ instruction | loopBlock }
+statement      = _{ instruction | loopBlock }
+statements     = _{ statement* }
+
 
 file = {SOI ~ (statement ~ ("\n" | "\r\n")+)* ~ EOI}
