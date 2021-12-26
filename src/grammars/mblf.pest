@@ -1,7 +1,7 @@
 operator       = @{ "operator" } // TODO
 operand        = @{ "operand" }  // TODO
 
-instruction    = { operator ~ (" "+ ~ operand)? }
+instruction    = { operator ~ (spacing+ ~ operand)? }
 
 loopBlockStart = { "[" ~ newline }
 loopBlockEnd   = { "]" }
@@ -15,5 +15,6 @@ statement      = _{ instruction | loopBlock }
 statements     = _{ statement* }
 
 newline        = _{ "\n" | "\r\n" }
+spacing        = _{ " "  | "\t" }
 
 file = {SOI ~ (statement ~ newline+)* ~ EOI}
