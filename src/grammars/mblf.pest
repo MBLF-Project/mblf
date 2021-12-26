@@ -3,10 +3,11 @@ operand        = @{ "operand" }  // TODO
 
 instruction    = { operator ~ (" "+ ~ operand)? }
 
-loopBlockStart = { "[" }
+loopBlockStart = { "[" ~ ("\n" | "\r\n") }
 loopBlockEnd   = { "]" }
 loopBlock      = { loopBlockStart
                  ~ statements
+                 ~ ("\n" | "\r\n")
                  ~ loopBlockEnd
                  }
 
