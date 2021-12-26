@@ -3,7 +3,7 @@ operand        = @{ "operand" }  // TODO
 
 instruction    = { operator ~ (spacing+ ~ operand)? }
 
-loopBlockStart = { "[" ~ newline }
+loopBlockStart = { "[" ~ NEWLINE }
 loopBlockEnd   = { "]" }
 loopBlock      = { loopBlockStart
                  ~ statements
@@ -14,10 +14,9 @@ statement      = _{ spacing*
                   ~ (instruction | loopBlock)
                   }
 
-statements     = _{ (statement | newline)* }
+statements     = _{ (statement | NEWLINE)* }
 
-newline        = _{ "\n" | "\r\n" }
 spacing        = _{ " "  | "\t" }
-COMMENT        = _{ ";;" ~ (!newline ~ ANY)* ~ newline}
+COMMENT        = _{ ";;" ~ (!NEWLINE ~ ANY)* ~ NEWLINE}
 
-file = {SOI ~ (statement ~ newline+)* ~ EOI}
+file = {SOI ~ (statement ~ NEWLINE+)* ~ EOI}
