@@ -7,7 +7,6 @@ loopBlockStart = { "[" ~ newline }
 loopBlockEnd   = { "]" }
 loopBlock      = { loopBlockStart
                  ~ statements
-                 ~ newline
                  ~ loopBlockEnd
                  }
 
@@ -15,7 +14,7 @@ statement      = _{ spacing*
                   ~ (instruction | loopBlock)
                   }
 
-statements     = _{ statement* }
+statements     = _{ (statement | newline)* }
 
 newline        = _{ "\n" | "\r\n" }
 spacing        = _{ " "  | "\t" }
