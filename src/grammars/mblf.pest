@@ -11,7 +11,10 @@ loopBlock      = { loopBlockStart
                  ~ loopBlockEnd
                  }
 
-statement      = _{ instruction | loopBlock }
+statement      = _{ spacing*
+                  ~ (instruction | loopBlock)
+                  }
+
 statements     = _{ statement* }
 
 newline        = _{ "\n" | "\r\n" }
