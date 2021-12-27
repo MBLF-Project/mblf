@@ -1,7 +1,34 @@
 operator       = @{ "operator" } // TODO
 operand        = @{ "operand" }  // TODO
 
-instruction    = { operator ~ (spacing+ ~ operand)? }
+variable       =@{ ASCII_ALPHA
+                 ~ (ASCII_ALPHANUMERIC | " ")*
+                 }
+
+var            =@{ "var"    ~ spacing+ ~ variable }
+delvar         =@{ "delvar" ~ spacing+ ~ variable }
+
+point          =@{ "point"  ~ spacing+ ~ variable }
+pointm         =@{ "pointm" ~ spacing+ ~ variable }
+
+addv           =@{ "addv"   ~ spacing+ ~ variable }
+subv           =@{ "subv"   ~ spacing+ ~ variable }
+
+copy           =@{ "copy"   ~ spacing+ ~ variable }
+
+instruction    =_{ var
+                 | delvar
+
+                 | point
+                 | pointm
+
+                 | addv
+                 | subv
+
+                 | copy
+
+                 | operator ~ (spacing+ ~ operand)?
+                 }
 
 loopBlockStart = { "[" ~ NEWLINE }
 loopBlockEnd   = { "]" }

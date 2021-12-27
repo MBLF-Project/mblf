@@ -24,12 +24,56 @@ struct Cli {
     output_file: std::path::PathBuf,
 }
 
+fn extract_operand(statement: Pair<Rule>) -> &str {
+    let mut line = statement.as_str();
+
+    while let Some(c) = line.chars().next() {
+        line = &line[c.len_utf8()..];
+        if c == ' ' {
+            break;
+        }
+    }
+    line
+}
+
 fn instruct(statement: Pair<Rule>, out: &mut Builder) {
     match statement.as_rule() {
+        Rule::var => {
+            let variable_name = extract_operand(statement);
+            println!("Creation of variable '{}'", variable_name);
+            out.append("var\n");
+        }
+        Rule::delvar => {
+            let variable_name = extract_operand(statement);
+            println!("Deletion of variable '{}'", variable_name);
+            out.append("delvar\n");
+        }
+        Rule::point => {
+            let variable_name = extract_operand(statement);
+            println!("Pointing to variable '{}'", variable_name);
+            out.append("point\n");
+        }
+        Rule::pointm => {
+            let variable_name = extract_operand(statement);
+            println!("Pointing back to marker variable {}", variable_name);
+            out.append("pointm\n");
+        }
+        Rule::addv => {
+            let variable_name = extract_operand(statement);
+            println!("Addition to variable '{}'", variable_name);
+            out.append("addv\n");
+        }
+        Rule::subv => {
+            let variable_name = extract_operand(statement);
+            println!("Subtraction from variable '{}'", variable_name);
+            out.append("subv\n");
+        }
+        Rule::copy => {
+            let variable_name = extract_operand(statement);
+            println!("Copy to variable '{}'", variable_name);
+            out.append("copy\n");
+        }
         Rule::instruction => {
-            for nested_statement in statement.into_inner() {
-                instruct(nested_statement, out);
-            }
             out.append("\n");
         }
         Rule::operator => {
