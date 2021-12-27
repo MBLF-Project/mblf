@@ -89,12 +89,15 @@ fn instruct(statement: Pair<Rule>, out: &mut Builder) {
             }
         }
         Rule::loopBlockStart => {
+            println!("Start of loopBlock");
             out.append("loopBlockStart\n");
         }
         Rule::loopBlockEnd => {
+            println!("End of loopBlock");
             out.append("loopBlockEnd\n");
         }
         Rule::EOI => {
+            println!("End of Input");
             out.append("\n");
         }
         _ => unreachable!(),
