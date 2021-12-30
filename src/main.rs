@@ -36,8 +36,11 @@ fn extract_operand(statement: Pair<Rule>) -> &str {
     line
 }
 
-fn parse_num(text: &str) -> Result<i32, std::num::ParseIntError> {
-    if text.starts_with("0x") {
+fn parse_constant(text: &str) -> Result<i32, std::num::ParseIntError> {
+    if text.starts_with("\"") {
+        let c = text.chars().nth(1).unwrap();
+        Ok(c as i32)
+    } else if text.starts_with("0x") {
         let without_prefix = text.trim_start_matches("0x");
         i32::from_str_radix(without_prefix, 16)
     } else {
@@ -68,20 +71,20 @@ fn instruct(statement: Pair<Rule>, out: &mut Builder) {
             out.append("pointm\n");
         }
         Rule::add => {
-            let number = extract_operand(statement);
-            let number_parsed = parse_num(number).unwrap();
+            let constant = extract_operand(statement);
+            let constant_parsed = parse_constant(constant).unwrap();
             println!(
                 "Addition of '{}', decimal value is {}",
-                number, number_parsed
+                constant, constant_parsed
             );
             out.append("add\n");
         }
         Rule::addb => {
-            let number = extract_operand(statement);
-            let number_parsed = parse_num(number).unwrap();
+            let constant = extract_operand(statement);
+            let constant_parsed = parse_constant(constant).unwrap();
             println!(
                 "Big Addition of '{}', decimal value is {}",
-                number, number_parsed
+                constant, constant_parsed
             );
             out.append("addb\n");
         }
@@ -91,20 +94,20 @@ fn instruct(statement: Pair<Rule>, out: &mut Builder) {
             out.append("addv\n");
         }
         Rule::sub => {
-            let number = extract_operand(statement);
-            let number_parsed = parse_num(number).unwrap();
+            let constant = extract_operand(statement);
+            let constant_parsed = parse_constant(constant).unwrap();
             println!(
                 "Subtraction of '{}', decimal value is {}",
-                number, number_parsed
+                constant, constant_parsed
             );
             out.append("sub\n");
         }
         Rule::subb => {
-            let number = extract_operand(statement);
-            let number_parsed = parse_num(number).unwrap();
+            let constant = extract_operand(statement);
+            let constant_parsed = parse_constant(constant).unwrap();
             println!(
                 "Big Subtraction of '{}', decimal value is {}",
-                number, number_parsed
+                constant, constant_parsed
             );
             out.append("subb\n");
         }

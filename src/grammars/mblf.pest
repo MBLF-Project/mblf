@@ -5,9 +5,11 @@ variable       =@{ ASCII_ALPHA
                  ~ (ASCII_ALPHANUMERIC | " ")*
                  }
 
+char           =_{ "\"" ~ ANY ~ "\"" }
 decNum         =_{ ASCII_DIGIT+ }
 hexNum         =_{ "0x" ~ ASCII_HEX_DIGIT+ }
-num            = { hexNum | decNum }
+num            =_{ hexNum | decNum }
+constant       = { char | num }
 
 var            =@{ "var"    ~ spacing+ ~ variable }
 delvar         =@{ "delvar" ~ spacing+ ~ variable }
@@ -15,12 +17,12 @@ delvar         =@{ "delvar" ~ spacing+ ~ variable }
 point          =@{ "point"  ~ spacing+ ~ variable }
 pointm         =@{ "pointm" ~ spacing+ ~ variable }
 
-add            =@{ "add"    ~ spacing+ ~ num }
-addb           =@{ "addb"   ~ spacing+ ~ num }
+add            =@{ "add"    ~ spacing+ ~ constant }
+addb           =@{ "addb"   ~ spacing+ ~ constant }
 addv           =@{ "addv"   ~ spacing+ ~ variable }
 
-sub            =@{ "sub"    ~ spacing+ ~ num }
-subb           =@{ "subb"   ~ spacing+ ~ num }
+sub            =@{ "sub"    ~ spacing+ ~ constant }
+subb           =@{ "subb"   ~ spacing+ ~ constant }
 subv           =@{ "subv"   ~ spacing+ ~ variable }
 
 copy           =@{ "copy"   ~ spacing+ ~ variable }
