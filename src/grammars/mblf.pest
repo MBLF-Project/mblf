@@ -24,6 +24,10 @@ subb           =@{ "subb"   ~ spacing+ ~ num }
 subv           =@{ "subv"   ~ spacing+ ~ variable }
 
 copy           =@{ "copy"   ~ spacing+ ~ variable }
+setz           =@{ "setz" }
+
+getchr         =@{ "getchr" }
+print          =@{ "print" }
 
 instruction    =_{ var
                  | delvar
@@ -40,6 +44,10 @@ instruction    =_{ var
                  | subv
 
                  | copy
+                 | setz
+
+                 | getchr
+                 | print
 
                  | operator ~ (spacing+ ~ operand)?
                  }

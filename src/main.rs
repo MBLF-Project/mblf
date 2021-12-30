@@ -118,6 +118,18 @@ fn instruct(statement: Pair<Rule>, out: &mut Builder) {
             println!("Copy to variable '{}'", variable_name);
             out.append("copy\n");
         }
+        Rule::setz => {
+            println!("Set current variable to zero");
+            out.append("setz\n");
+        }
+        Rule::getchr => {
+            println!("Reading char from user input into current variable");
+            out.append("getchr\n");
+        }
+        Rule::print => {
+            println!("Printing current variable");
+            out.append("print\n");
+        }
         Rule::instruction => {
             out.append("\n");
         }
