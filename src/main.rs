@@ -36,6 +36,15 @@ fn extract_operand(statement: Pair<Rule>) -> &str {
     line
 }
 
+fn parse_num(text: &str) -> Result<i32, std::num::ParseIntError> {
+    if text.starts_with("0x") {
+        let without_prefix = text.trim_start_matches("0x");
+        i32::from_str_radix(without_prefix, 16)
+    } else {
+        i32::from_str_radix(text, 10)
+    }
+}
+
 fn instruct(statement: Pair<Rule>, out: &mut Builder) {
     match statement.as_rule() {
         Rule::var => {
@@ -58,10 +67,46 @@ fn instruct(statement: Pair<Rule>, out: &mut Builder) {
             println!("Pointing back to marker variable {}", variable_name);
             out.append("pointm\n");
         }
+        Rule::add => {
+            let number = extract_operand(statement);
+            let number_parsed = parse_num(number).unwrap();
+            println!(
+                "Addition of '{}', decimal value is {}",
+                number, number_parsed
+            );
+            out.append("add\n");
+        }
+        Rule::addb => {
+            let number = extract_operand(statement);
+            let number_parsed = parse_num(number).unwrap();
+            println!(
+                "Big Addition of '{}', decimal value is {}",
+                number, number_parsed
+            );
+            out.append("addb\n");
+        }
         Rule::addv => {
             let variable_name = extract_operand(statement);
             println!("Addition to variable '{}'", variable_name);
             out.append("addv\n");
+        }
+        Rule::sub => {
+            let number = extract_operand(statement);
+            let number_parsed = parse_num(number).unwrap();
+            println!(
+                "Subtraction of '{}', decimal value is {}",
+                number, number_parsed
+            );
+            out.append("sub\n");
+        }
+        Rule::subb => {
+            let number = extract_operand(statement);
+            let number_parsed = parse_num(number).unwrap();
+            println!(
+                "Big Subtraction of '{}', decimal value is {}",
+                number, number_parsed
+            );
+            out.append("subb\n");
         }
         Rule::subv => {
             let variable_name = extract_operand(statement);
