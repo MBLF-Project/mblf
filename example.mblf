@@ -2,4 +2,5 @@
 var hello
 point hello
 add "!"
-print hello
+;; There is no need to point to hello again
+print
