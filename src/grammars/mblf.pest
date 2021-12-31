@@ -1,8 +1,10 @@
 operator       = @{ "operator" } // TODO
 operand        = @{ "operand" }  // TODO
 
+wordSeperator  =_{ " " | "-" | "_" }
 variable       =@{ ASCII_ALPHA
-                 ~ (ASCII_ALPHANUMERIC | " ")*
+                 ~ (ASCII_ALPHANUMERIC | wordSeperator)*
+                 ~ "?"?
                  }
 
 char           =_{ "\"" ~ ANY ~ "\"" }
