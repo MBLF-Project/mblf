@@ -1,6 +1,3 @@
-operator       = @{ "operator" } // TODO
-operand        = @{ "operand" }  // TODO
-
 wordSeperator  =_{ " " | "-" | "_" }
 variable       =@{ ASCII_ALPHA
                  ~ (ASCII_ALPHANUMERIC | wordSeperator)*
@@ -16,21 +13,21 @@ path           = { "\"" ~ (!"\"" ~ ANY)+ ~ "\"" }
 
 include        =@{ "#include" ~ spacing+ ~ path }
 
-var            =@{ "var"    ~ spacing+ ~ variable }
-delvar         =@{ "delvar" ~ spacing+ ~ variable }
+var            =@{ "var"      ~ spacing+ ~ variable }
+delvar         =@{ "delvar"   ~ spacing+ ~ variable }
 
-point          =@{ "point"  ~ spacing+ ~ variable }
-pointm         =@{ "pointm" ~ spacing+ ~ variable }
+point          =@{ "point"    ~ spacing+ ~ variable }
+pointm         =@{ "pointm"   ~ spacing+ ~ variable }
 
-add            =@{ "add"    ~ spacing+ ~ constant }
-addb           =@{ "addb"   ~ spacing+ ~ constant }
-addv           =@{ "addv"   ~ spacing+ ~ variable }
+add            =@{ "add"      ~ spacing+ ~ constant }
+addb           =@{ "addb"     ~ spacing+ ~ constant }
+addv           =@{ "addv"     ~ spacing+ ~ variable }
 
-sub            =@{ "sub"    ~ spacing+ ~ constant }
-subb           =@{ "subb"   ~ spacing+ ~ constant }
-subv           =@{ "subv"   ~ spacing+ ~ variable }
+sub            =@{ "sub"      ~ spacing+ ~ constant }
+subb           =@{ "subb"     ~ spacing+ ~ constant }
+subv           =@{ "subv"     ~ spacing+ ~ variable }
 
-copy           =@{ "copy"   ~ spacing+ ~ variable }
+copy           =@{ "copy"     ~ spacing+ ~ variable }
 setz           =@{ "setz" }
 
 getchr         =@{ "getchr" }
@@ -58,8 +55,6 @@ instruction    =_{ macaroo
 
                  | getchr
                  | print
-
-                 | operator ~ (spacing+ ~ operand)?
                  }
 
 loopBlockStart = { "[" ~ NEWLINE }
@@ -69,13 +64,13 @@ loopBlock      = { loopBlockStart
                  ~ spacing* ~ loopBlockEnd
                  }
 
-statement      = _{ spacing*
-                  ~ (instruction | loopBlock)
-                  }
+statement      =_{ spacing*
+                 ~ (instruction | loopBlock)
+                 }
 
-statements     = _{ (statement | NEWLINE)* }
+statements     =_{ (statement | NEWLINE)* }
 
-spacing        = _{ " "  | "\t" }
-COMMENT        = _{ ";;" ~ (!NEWLINE ~ ANY)* ~ NEWLINE}
+spacing        =_{ " "  | "\t" }
+COMMENT        =_{ ";;" ~ (!NEWLINE ~ ANY)* ~ NEWLINE }
 
-file = {SOI ~ (statement ~ NEWLINE+)* ~ EOI}
+file           = { SOI ~ (statement ~ NEWLINE+)* ~ EOI }

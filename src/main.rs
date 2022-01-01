@@ -141,13 +141,6 @@ fn instruct(statement: Pair<Rule>, out: &mut Builder) {
         Rule::instruction => {
             out.append("\n");
         }
-        Rule::operator => {
-            out.append("operator ");
-        }
-        Rule::operand => {
-            out.append("operand ");
-        }
-
         Rule::loopBlock => {
             for nested_statement in statement.into_inner() {
                 instruct(nested_statement, out);
