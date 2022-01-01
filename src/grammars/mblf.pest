@@ -71,6 +71,6 @@ statement      =_{ spacing*
 statements     =_{ (statement | NEWLINE)* }
 
 spacing        =_{ " "  | "\t" }
-COMMENT        =_{ ";;" ~ (!NEWLINE ~ ANY)* ~ NEWLINE }
+COMMENT        =_{ ";;" ~ (!NEWLINE ~ ANY)* ~ NEWLINE+ }
 
 file           = { SOI ~ (statement ~ NEWLINE+)* ~ EOI }
