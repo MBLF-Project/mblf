@@ -60,7 +60,7 @@ loopBlockStart = { "[" ~ NEWLINE }
 loopBlockEnd   = { "]" }
 loopBlock      = { loopBlockStart
                  ~ statements
-                 ~ loopBlockEnd
+                 ~ spacing* ~ loopBlockEnd
                  }
 
 statement      = _{ spacing*
