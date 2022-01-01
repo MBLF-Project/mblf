@@ -50,6 +50,11 @@ fn parse_constant(text: &str) -> Result<i32, std::num::ParseIntError> {
 
 fn instruct(statement: Pair<Rule>, out: &mut Builder) {
     match statement.as_rule() {
+        Rule::include => {
+            let file_path = extract_operand(statement);
+            println!("Including {} into this src file", file_path);
+            out.append("#include\n");
+        }
         Rule::var => {
             let variable_name = extract_operand(statement);
             println!("Creation of variable '{}'", variable_name);

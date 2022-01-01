@@ -12,6 +12,9 @@ decNum         =_{ ASCII_DIGIT+ }
 hexNum         =_{ "0x" ~ ASCII_HEX_DIGIT+ }
 num            =_{ hexNum | decNum }
 constant       = { char | num }
+path           = { "\"" ~ (!"\"" ~ ANY)+ ~ "\"" }
+
+include        =@{ "#include" ~ spacing+ ~ path }
 
 var            =@{ "var"    ~ spacing+ ~ variable }
 delvar         =@{ "delvar" ~ spacing+ ~ variable }
@@ -33,7 +36,10 @@ setz           =@{ "setz" }
 getchr         =@{ "getchr" }
 print          =@{ "print" }
 
-instruction    =_{ var
+macaroo        =_{ include }
+instruction    =_{ macaroo
+
+                 | var
                  | delvar
 
                  | point
