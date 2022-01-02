@@ -11,27 +11,27 @@ num            =_{ hexNum | decNum }
 constant       = { char | num }
 path           = { "\"" ~ (!"\"" ~ ANY)+ ~ "\"" }
 
-include        =@{ "#include" ~ spacing+ ~ path }
+include        = { "#include" ~ path }
 
-var            =@{ "var"      ~ spacing+ ~ variable }
-delvar         =@{ "delvar"   ~ spacing+ ~ variable }
+var            = { "var"      ~ variable }
+delvar         = { "delvar"   ~ variable }
 
-point          =@{ "point"    ~ spacing+ ~ variable }
-pointm         =@{ "pointm"   ~ spacing+ ~ variable }
+point          = { "point"    ~ variable }
+pointm         = { "pointm"   ~ variable }
 
-add            =@{ "add"      ~ spacing+ ~ constant }
-addb           =@{ "addb"     ~ spacing+ ~ constant }
-addv           =@{ "addv"     ~ spacing+ ~ variable }
+add            = { "add"      ~ constant }
+addb           = { "addb"     ~ constant }
+addv           = { "addv"     ~ variable }
 
-sub            =@{ "sub"      ~ spacing+ ~ constant }
-subb           =@{ "subb"     ~ spacing+ ~ constant }
-subv           =@{ "subv"     ~ spacing+ ~ variable }
+sub            = { "sub"      ~ constant }
+subb           = { "subb"     ~ constant }
+subv           = { "subv"     ~ variable }
 
-copy           =@{ "copy"     ~ spacing+ ~ variable }
-setz           =@{ "setz" }
+copy           = { "copy"     ~ variable }
+setz           = { "setz" }
 
-getchr         =@{ "getchr" }
-print          =@{ "print" }
+getchr         = { "getchr" }
+print          = { "print" }
 
 macaroo        =_{ include }
 instruction    =_{ macaroo
@@ -61,16 +61,14 @@ loopBlockStart = { "[" ~ NEWLINE }
 loopBlockEnd   = { "]" }
 loopBlock      = { loopBlockStart
                  ~ statements
-                 ~ spacing* ~ loopBlockEnd
+                 ~ loopBlockEnd
                  }
 
-statement      =_{ spacing*
-                 ~ (instruction | loopBlock)
-                 }
+statement      =_{ (instruction | loopBlock) }
 
 statements     =_{ (statement | NEWLINE)* }
 
-spacing        =_{ " "  | "\t" }
+WHITESPACE     =_{ " "  | "\t" }
 COMMENT        =_{ ";;" ~ (!NEWLINE ~ ANY)* ~ NEWLINE+ }
 
 file           = { SOI ~ (statement ~ NEWLINE+)* ~ EOI }
