@@ -16,6 +16,8 @@ use pest::Parser;
 #[grammar = "grammars/mblf.pest"]
 struct MblfParser;
 
+struct State;
+
 #[derive(StructOpt)]
 struct Cli {
     #[structopt(parse(from_os_str))]
@@ -48,7 +50,7 @@ fn parse_constant(text: &str) -> Result<i32, std::num::ParseIntError> {
     }
 }
 
-fn instruct(statement: Pair<Rule>, out: &mut Builder) {
+fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
     match statement.as_rule() {
         Rule::include => {
             let file_path = extract_operand(statement);
@@ -143,7 +145,7 @@ fn instruct(statement: Pair<Rule>, out: &mut Builder) {
         }
         Rule::loopBlock => {
             for nested_statement in statement.into_inner() {
-                instruct(nested_statement, out);
+                instruct(nested_statement, state, out);
             }
         }
         Rule::loopBlockStart => {
@@ -175,8 +177,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .next()
         .unwrap();
 
+    let mut state = State;
     for statement in parsed_file.into_inner() {
-        instruct(statement, &mut builder);
+        instruct(statement, &mut state, &mut builder);
     }
 
     let bf = builder.string().unwrap();
