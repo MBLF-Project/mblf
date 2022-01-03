@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::Write;
 
@@ -16,7 +17,27 @@ use pest::Parser;
 #[grammar = "grammars/mblf.pest"]
 struct MblfParser;
 
-struct State;
+struct MemCell {
+    is_allocated: bool,
+    address: u32,
+    value: u8,
+}
+
+impl MemCell {
+    pub fn allocate(address: u32) -> Self {
+        Self {
+            is_allocated: true,
+            address,
+            value: 0,
+        }
+    }
+}
+
+struct State {
+    alloc_cnt: u32,
+    mem_pointer: u32,
+    variables: HashMap<String, MemCell>,
+}
 
 #[derive(StructOpt)]
 struct Cli {
@@ -177,7 +198,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .next()
         .unwrap();
 
-    let mut state = State;
+    let mut state = State {
+        alloc_cnt: 0,
+        mem_pointer: 0,
+        variables: HashMap::new(),
+    };
     for statement in parsed_file.into_inner() {
         instruct(statement, &mut state, &mut builder);
     }
