@@ -81,7 +81,11 @@ fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
         Rule::var => {
             let variable_name = extract_operand(statement);
             println!("Creation of variable '{}'", variable_name);
-            out.append("var\n");
+            state.variables.insert(
+                String::from(variable_name),
+                MemCell::allocate(state.alloc_cnt),
+            );
+            state.alloc_cnt += 1;
         }
         Rule::delvar => {
             let variable_name = extract_operand(statement);
