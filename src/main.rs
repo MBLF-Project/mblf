@@ -81,10 +81,12 @@ fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
         Rule::var => {
             let variable_name = extract_operand(statement);
             println!("Creation of variable '{}'", variable_name);
-            state.variables.insert(
+            if let Some(_v) = state.variables.insert(
                 String::from(variable_name),
                 MemCell::allocate(state.alloc_cnt),
-            );
+            ) {
+                panic!("Variable {} already exists", variable_name);
+            }
             state.alloc_cnt += 1;
         }
         Rule::delvar => {
