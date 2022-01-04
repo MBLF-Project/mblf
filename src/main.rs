@@ -92,7 +92,9 @@ fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
         Rule::delvar => {
             let variable_name = extract_operand(statement);
             println!("Deletion of variable '{}'", variable_name);
-            out.append("delvar\n");
+            if let None = state.variables.remove(&String::from(variable_name)) {
+                panic!("Variable '{}' did not exists", variable_name);
+            }
         }
         Rule::point => {
             let variable_name = extract_operand(statement);
