@@ -179,7 +179,7 @@ fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
         }
         Rule::print => {
             println!("Printing current variable");
-            out.append("print\n");
+            out.append(".");
         }
         Rule::instruction => {
             out.append("\n");
