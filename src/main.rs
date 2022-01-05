@@ -175,7 +175,7 @@ fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
         }
         Rule::getchr => {
             println!("Reading char from user input into current variable");
-            out.append("getchr\n");
+            out.append(",");
         }
         Rule::print => {
             println!("Printing current variable");
