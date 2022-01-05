@@ -114,7 +114,14 @@ fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
         Rule::pointm => {
             let variable_name = extract_operand(statement);
             println!("Pointing back to marker variable {}", variable_name);
-            out.append("pointm\n");
+            let address = state
+                .variables
+                .get(variable_name)
+                .unwrap_or_else(|| panic!("Marker variable '{}' did not exists", variable_name))
+                .address;
+            // thank you mixtela
+            out.append("<+[-<+]-");
+            state.mem_pointer = address;
         }
         Rule::add => {
             let constant = extract_operand(statement);
