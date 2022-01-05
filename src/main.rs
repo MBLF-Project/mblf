@@ -125,7 +125,7 @@ fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
                 "Addition of '{}', decimal value is {}",
                 constant, constant_parsed
             );
-            out.append("add\n");
+            out.append("+".repeat(constant_parsed as usize));
         }
         Rule::addb => {
             let constant = extract_operand(statement);
@@ -148,7 +148,7 @@ fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
                 "Subtraction of '{}', decimal value is {}",
                 constant, constant_parsed
             );
-            out.append("sub\n");
+            out.append("-".repeat(constant_parsed as usize));
         }
         Rule::subb => {
             let constant = extract_operand(statement);
