@@ -99,7 +99,17 @@ fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
         Rule::point => {
             let variable_name = extract_operand(statement);
             println!("Pointing to variable '{}'", variable_name);
-            out.append("point\n");
+            let address = state
+                .variables
+                .get(variable_name)
+                .unwrap_or_else(|| panic!("Variable '{}' did not exists", variable_name))
+                .address;
+            if address < state.mem_pointer {
+                out.append("<".repeat((state.mem_pointer - address) as usize))
+            } else if address > state.mem_pointer {
+                out.append(">".repeat((address - state.mem_pointer) as usize))
+            }
+            state.mem_pointer = address;
         }
         Rule::pointm => {
             let variable_name = extract_operand(statement);
