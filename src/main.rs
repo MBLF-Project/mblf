@@ -18,18 +18,13 @@ use pest::Parser;
 struct MblfParser;
 
 struct MemCell {
-    is_allocated: bool,
     address: u32,
     value: u8,
 }
 
 impl MemCell {
     pub fn allocate(address: u32) -> Self {
-        Self {
-            is_allocated: true,
-            address,
-            value: 0,
-        }
+        Self { address, value: 0 }
     }
 }
 
