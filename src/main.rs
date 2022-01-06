@@ -19,12 +19,11 @@ struct MblfParser;
 
 struct MemCell {
     address: u32,
-    value: u8,
 }
 
 impl MemCell {
     pub fn allocate(address: u32) -> Self {
-        Self { address, value: 0 }
+        Self { address }
     }
 }
 
