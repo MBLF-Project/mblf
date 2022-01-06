@@ -191,9 +191,6 @@ fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
             println!("Printing current variable");
             out.append(".");
         }
-        Rule::instruction => {
-            out.append("\n");
-        }
         Rule::loopBlock => {
             for nested_statement in statement.into_inner() {
                 instruct(nested_statement, state, out);
