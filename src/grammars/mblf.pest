@@ -20,11 +20,9 @@ point          =@{ "point"    ~ spacing+ ~ variable }
 pointm         =@{ "pointm"   ~ spacing+ ~ variable }
 
 add            =@{ "add"      ~ spacing+ ~ constant }
-addb           =@{ "addb"     ~ spacing+ ~ constant }
 addv           =@{ "addv"     ~ spacing+ ~ variable }
 
 sub            =@{ "sub"      ~ spacing+ ~ constant }
-subb           =@{ "subb"     ~ spacing+ ~ constant }
 subv           =@{ "subv"     ~ spacing+ ~ variable }
 
 copy           =@{ "copy"     ~ spacing+ ~ variable }
@@ -43,11 +41,9 @@ instruction    =_{ macaroo
                  | pointm
 
                  | add
-                 | addb
                  | addv
 
                  | sub
-                 | subb
                  | subv
 
                  | copy

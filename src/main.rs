@@ -122,15 +122,6 @@ fn to_bf(rule: Rule, operand: &str, state: &mut State, out: &mut Builder) {
             );
             out.append("+".repeat(constant_parsed as usize));
         }
-        Rule::addb => {
-            let constant = operand;
-            let constant_parsed = parse_constant(constant).unwrap();
-            println!(
-                "Big Addition of '{}', decimal value is {}",
-                constant, constant_parsed
-            );
-            out.append("addb\n");
-        }
         Rule::addv => {
             let variable_name = operand;
             println!("Addition to variable '{}'", variable_name);
@@ -144,15 +135,6 @@ fn to_bf(rule: Rule, operand: &str, state: &mut State, out: &mut Builder) {
                 constant, constant_parsed
             );
             out.append("-".repeat(constant_parsed as usize));
-        }
-        Rule::subb => {
-            let constant = operand;
-            let constant_parsed = parse_constant(constant).unwrap();
-            println!(
-                "Big Subtraction of '{}', decimal value is {}",
-                constant, constant_parsed
-            );
-            out.append("subb\n");
         }
         Rule::subv => {
             let variable_name = operand;
