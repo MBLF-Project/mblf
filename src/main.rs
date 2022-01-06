@@ -69,9 +69,19 @@ fn parse_constant(text: &str) -> Result<i32, std::num::ParseIntError> {
 fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
     match statement.as_rule() {
         Rule::include => {
-            let file_path = extract_operand(statement);
+            let file_path_raw = extract_operand(statement);
+            let file_path = &file_path_raw[1..file_path_raw.len() - 1];
             println!("Including {} into this src file", file_path);
-            out.append("#include\n");
+            let content = std::fs::read_to_string(&file_path)
+                .with_context(|| format!("could not read source file {:?}", file_path))
+                .unwrap();
+            let parsed_file = MblfParser::parse(Rule::file, &content)
+                .expect("Parse Error")
+                .next()
+                .unwrap();
+            for statement in parsed_file.into_inner() {
+                instruct(statement, state, out);
+            }
         }
         Rule::var => {
             let variable_name = extract_operand(statement);
