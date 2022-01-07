@@ -92,13 +92,20 @@ fn to_bf(rule: Rule, operand: &str, state: &mut State, out: &mut Builder) {
                 .variables
                 .get(variable_name)
                 .unwrap_or_else(|| panic!("Variable '{}' did not exists", variable_name))
-                .address;
-            if address < state.mem_pointer {
-                out.append("<".repeat((state.mem_pointer - address) as usize))
-            } else if address > state.mem_pointer {
-                out.append(">".repeat((address - state.mem_pointer) as usize))
+                .address
+                .to_string();
+            to_bf(Rule::pointa, &address, state, out)
+        }
+        Rule::pointa => {
+            let address = operand;
+            let address_parsed = parse_constant(address).unwrap();
+            println!("Pointing to address '{}'", address);
+            if address_parsed < state.mem_pointer {
+                out.append("<".repeat((state.mem_pointer - address_parsed) as usize))
+            } else if address_parsed > state.mem_pointer {
+                out.append(">".repeat((address_parsed - state.mem_pointer) as usize))
             }
-            state.mem_pointer = address;
+            state.mem_pointer = address_parsed;
         }
         Rule::pointm => {
             let variable_name = operand;

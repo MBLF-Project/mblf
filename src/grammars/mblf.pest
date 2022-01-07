@@ -17,6 +17,7 @@ var            =@{ "var"      ~ spacing+ ~ variable }
 delvar         =@{ "delvar"   ~ spacing+ ~ variable }
 
 point          =@{ "point"    ~ spacing+ ~ variable }
+pointa         =@{ "pointa"   ~ spacing+ ~ num      }
 pointm         =@{ "pointm"   ~ spacing+ ~ variable }
 
 add            =@{ "add"      ~ spacing+ ~ constant }
@@ -38,6 +39,7 @@ instruction    =_{ macaroo
                  | delvar
 
                  | point
+                 | pointa
                  | pointm
 
                  | add
