@@ -162,7 +162,24 @@ fn to_bf(rule: Rule, operand: &str, state: &mut State, out: &mut Builder) {
         Rule::copy => {
             let variable_name = operand;
             println!("Copy to variable '{}'", variable_name);
-            out.append("copy\n");
+            let source_address = state.mem_pointer.to_string();
+            to_bf(Rule::var, "__temp", state, out);
+            out.append("[");
+            to_bf(Rule::sub, "1", state, out);
+            to_bf(Rule::point, variable_name, state, out);
+            to_bf(Rule::add, "1", state, out);
+            to_bf(Rule::point, "__temp", state, out);
+            to_bf(Rule::add, "1", state, out);
+            to_bf(Rule::pointa, &source_address, state, out);
+            out.append("]");
+            to_bf(Rule::point, "__temp", state, out);
+            out.append("[");
+            to_bf(Rule::sub, "1", state, out);
+            to_bf(Rule::pointa, &source_address, state, out);
+            to_bf(Rule::add, "1", state, out);
+            to_bf(Rule::point, "__temp", state, out);
+            out.append("]");
+            to_bf(Rule::delvar, "__temp", state, out);
         }
         Rule::setz => {
             println!("Set current variable to zero");
