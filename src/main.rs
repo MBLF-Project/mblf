@@ -131,7 +131,13 @@ fn to_bf(rule: Rule, operand: &str, state: &mut State, out: &mut Builder) {
         Rule::addv => {
             let variable_name = operand;
             println!("Addition to variable '{}'", variable_name);
-            out.append("addv\n");
+            let source_address = state.mem_pointer.to_string();
+            out.append("[");
+            to_bf(Rule::sub, "1", state, out);
+            to_bf(Rule::point, variable_name, state, out);
+            to_bf(Rule::add, "1", state, out);
+            to_bf(Rule::pointa, &source_address, state, out);
+            out.append("]");
         }
         Rule::sub => {
             let constant = operand;
@@ -145,7 +151,13 @@ fn to_bf(rule: Rule, operand: &str, state: &mut State, out: &mut Builder) {
         Rule::subv => {
             let variable_name = operand;
             println!("Subtraction from variable '{}'", variable_name);
-            out.append("subv\n");
+            let source_address = state.mem_pointer.to_string();
+            out.append("[");
+            to_bf(Rule::sub, "1", state, out);
+            to_bf(Rule::point, variable_name, state, out);
+            to_bf(Rule::sub, "1", state, out);
+            to_bf(Rule::pointa, &source_address, state, out);
+            out.append("]");
         }
         Rule::copy => {
             let variable_name = operand;
