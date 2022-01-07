@@ -53,15 +53,15 @@ fn extract_operand(statement: Pair<Rule>) -> &str {
     line
 }
 
-fn parse_constant(text: &str) -> Result<i32, std::num::ParseIntError> {
+fn parse_constant(text: &str) -> Result<u32, std::num::ParseIntError> {
     if text.starts_with("\"") {
         let c = text.chars().nth(1).unwrap();
-        Ok(c as i32)
+        Ok(c as u32)
     } else if text.starts_with("0x") {
         let without_prefix = text.trim_start_matches("0x");
-        i32::from_str_radix(without_prefix, 16)
+        u32::from_str_radix(without_prefix, 16)
     } else {
-        i32::from_str_radix(text, 10)
+        u32::from_str_radix(text, 10)
     }
 }
 
