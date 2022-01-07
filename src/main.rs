@@ -1,3 +1,5 @@
+#![allow(clippy::from_str_radix_10)]
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Write;
@@ -54,7 +56,7 @@ fn extract_operand(statement: Pair<Rule>) -> &str {
 }
 
 fn parse_constant(text: &str) -> Result<u32, std::num::ParseIntError> {
-    if text.starts_with("\"") {
+    if text.starts_with('\"') {
         let c = text.chars().nth(1).unwrap();
         Ok(c as u32)
     } else if text.starts_with("0x") {
@@ -79,7 +81,11 @@ fn to_bf(rule: Rule, operand: &str, state: &mut State, out: &mut Builder) {
         }
         Rule::delvar => {
             let variable_name = operand;
-            if let None = state.variables.remove(&String::from(variable_name)) {
+            if state
+                .variables
+                .remove(&String::from(variable_name))
+                .is_none()
+            {
                 panic!("Variable '{}' did not exists", variable_name);
             }
         }
@@ -96,10 +102,14 @@ fn to_bf(rule: Rule, operand: &str, state: &mut State, out: &mut Builder) {
         Rule::pointa => {
             let address = operand;
             let address_parsed = parse_constant(address).unwrap();
-            if address_parsed < state.mem_pointer {
-                out.append("<".repeat((state.mem_pointer - address_parsed) as usize))
-            } else if address_parsed > state.mem_pointer {
-                out.append(">".repeat((address_parsed - state.mem_pointer) as usize))
+            match address_parsed.cmp(&state.mem_pointer) {
+                Ordering::Less => {
+                    out.append("<".repeat((state.mem_pointer - address_parsed) as usize))
+                }
+                Ordering::Greater => {
+                    out.append(">".repeat((address_parsed - state.mem_pointer) as usize))
+                }
+                Ordering::Equal => (),
             }
             state.mem_pointer = address_parsed;
         }
@@ -234,7 +244,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let bf = builder.string().unwrap();
 
     let mut out = File::create(args.output_file)?;
-    out.write(bf.as_bytes())?;
+    out.write_all(bf.as_bytes())?;
     out.sync_all()?;
 
     Ok(())
