@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::Write;
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 use string_builder::Builder;
 use structopt::StructOpt;
 
@@ -73,7 +73,7 @@ fn to_bf(rule: Rule, operand: &str, state: &mut State, out: &mut Builder) {
                 String::from(variable_name),
                 MemCell::allocate(state.alloc_cnt),
             ) {
-                panic!("Variable {} already exists", variable_name);
+                panic!("Variable '{}' already exists", variable_name);
             }
             state.alloc_cnt += 1;
         }
@@ -192,9 +192,7 @@ fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
         Rule::include => {
             let file_path_raw = extract_operand(statement);
             let file_path = &file_path_raw[1..file_path_raw.len() - 1];
-            let content = std::fs::read_to_string(&file_path)
-                .with_context(|| format!("could not read source file {:?}", file_path))
-                .unwrap();
+            let content = std::fs::read_to_string(&file_path).unwrap();
             let parsed_file = MblfParser::parse(Rule::file, &content)
                 .expect("Parse Error")
                 .next()
@@ -215,8 +213,7 @@ fn instruct(statement: Pair<Rule>, state: &mut State, out: &mut Builder) {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Cli::from_args();
 
-    let content = std::fs::read_to_string(&args.input_file)
-        .with_context(|| format!("could not read source file {:?}", args.input_file))?;
+    let content = std::fs::read_to_string(&args.input_file)?;
 
     let mut builder = Builder::default();
 
