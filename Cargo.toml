@@ -2,8 +2,18 @@
 name = "mblf"
 version = "0.1.0"
 edition = "2018"
+description = """
+The MBLF-To-BF compiler written in Rust with Pest.
+MBLF is a programming language on top of the esoteric programming language Brainfuck
+"""
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["Raymon Zutekouw <contact@raymon.dev>"]
+
+repository = "https://github.com/MBLF-Project/mblf"
+license = "MIT OR Apache-2.0"
+
+keywords = ["compiler", "mblf", "brainfuck", "pest"]
+categories = ["compilers", "command-line-utilities", "parser-implementations"]
 
 [dependencies]
 anyhow = "1.0.44"
