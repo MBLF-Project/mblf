@@ -249,3 +249,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_constant() {
+        assert_eq!(parse_constant(&"42"), Ok(42));
+        assert_eq!(parse_constant(&"0x2A"), Ok(42));
+        assert_eq!(parse_constant(&"\"*\""), Ok(42));
+
+        assert!(
+            matches!(
+                parse_constant(&"\'*\'"),
+                Err(std::num::ParseIntError { .. })
+            ),
+            "Char literals are declared with \"_\", not \'_\'"
+        );
+    }
+}
