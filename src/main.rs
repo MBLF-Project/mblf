@@ -24,13 +24,14 @@ struct MemCell {
 }
 
 impl MemCell {
-    pub fn allocate(address: u32) -> Self {
+    pub fn allocate_to(address: u32) -> Self {
         Self { address }
     }
 }
 
 struct State {
     alloc_cnt: u32,
+    free_list: Vec<u32>,
     mem_pointer: u32,
     variables: HashMap<String, MemCell>,
 }
@@ -71,23 +72,35 @@ fn to_bf(rule: Rule, operand: &str, state: &mut State, out: &mut Builder) {
     match rule {
         Rule::var => {
             let variable_name = operand;
+
+            let mem_extension: u32;
+            let new_address: u32;
+
+            if !state.free_list.is_empty() {
+                new_address = state.free_list.pop().unwrap();
+                mem_extension = 0;
+            } else {
+                new_address = state.alloc_cnt;
+                mem_extension = 1;
+            }
+
             if let Some(_v) = state.variables.insert(
                 String::from(variable_name),
-                MemCell::allocate(state.alloc_cnt),
+                MemCell::allocate_to(new_address),
             ) {
                 panic!("Variable '{}' already exists", variable_name);
             }
-            state.alloc_cnt += 1;
+            state.alloc_cnt += mem_extension;
         }
         Rule::delvar => {
             let variable_name = operand;
-            if state
+            let memcell = state
                 .variables
-                .remove(&String::from(variable_name))
-                .is_none()
-            {
-                panic!("Variable '{}' did not exists", variable_name);
-            }
+                .get(variable_name)
+                .ok_or_else(|| format!("Variable '{}' did not exists", variable_name))
+                .unwrap();
+            state.free_list.push(memcell.address);
+            state.variables.remove(&String::from(variable_name));
         }
         Rule::point => {
             let variable_name = operand;
@@ -234,6 +247,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let mut state = State {
         alloc_cnt: 0,
+        free_list: Vec::new(),
         mem_pointer: 0,
         variables: HashMap::new(),
     };
@@ -266,6 +280,36 @@ mod tests {
                 Err(std::num::ParseIntError { .. })
             ),
             "Char literals are declared with \"_\", not \'_\'"
+        );
+    }
+
+    #[test]
+    fn test_reuse_of_free_memcells() {
+        let mut builder = Builder::default();
+        let mut state = State {
+            alloc_cnt: 0,
+            free_list: Vec::new(),
+            mem_pointer: 0,
+            variables: HashMap::new(),
+        };
+
+        to_bf(Rule::var, "abc", &mut state, &mut builder);
+        assert_eq!(state.alloc_cnt, 1);
+
+        to_bf(Rule::delvar, "abc", &mut state, &mut builder);
+        assert_eq!(
+            state.alloc_cnt, 1,
+            "allocation should not be shrunken, that is too costly"
+        );
+
+        to_bf(Rule::var, "def", &mut state, &mut builder);
+        assert_ne!(
+            state.alloc_cnt, 2,
+            "the just de-allocated memorycell should be re-used"
+        );
+        assert_eq!(
+            state.alloc_cnt, 1,
+            "alloc, dealloc, alloc has a max usage of one memorycell"
         );
     }
 }
